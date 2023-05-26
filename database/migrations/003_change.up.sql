@@ -1,0 +1,6 @@
+BEGIN ;
+
+ALTER TABLE users
+    ALTER COLUMN user_name TYPE VARCHAR(30);
+
+COMMIT;
