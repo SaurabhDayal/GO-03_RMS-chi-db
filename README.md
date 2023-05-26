@@ -6,8 +6,8 @@ BEST PRACTICES (done)
   -  password hashing
   -  logout no need for taking id from URL, logout should be from token 
 - CONTEXT
-  - can add context to middleware for user details that we can access in handlers
-  - 
+  - can add context of keys-values in request from middleware
+  - ex. tokens, user details that we can access in handlers
 - ERROR HANDLING
   - create different error types
   - return specific error types from dbHelpers to handlers
@@ -15,6 +15,8 @@ BEST PRACTICES (done)
 - QUERY & URL Params Differences
   - query params are optional
   - specific use case
+- SQL Query jmoiron
+  - Get can also Returning columns while Inserting into database, alternative to Exec
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
