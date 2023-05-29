@@ -21,7 +21,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 			if token != "" {
 				w.Header().Set("Auth-Token", token)
 			}
-			w.WriteHeader(http.StatusOK)
+			w.WriteHeader(http.StatusCreated)
 			err = json.NewEncoder(w).Encode(user)
 			if err != nil {
 				errorHandling.ErrHandle(errorHandling.UnableToWriteJSON(), w)

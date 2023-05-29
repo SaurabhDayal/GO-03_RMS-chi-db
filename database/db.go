@@ -1,6 +1,7 @@
 package database
 
 import (
+	"06_RMS-chi-db/errorHandling"
 	"fmt"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -51,4 +52,25 @@ func migrateUp(db *sqlx.DB) error {
 		return err
 	}
 	return nil
+}
+
+// Tx provides the transaction wrapper
+func Tx(fn func(tx *sqlx.Tx) error) error {
+	tx, err := RMS.Beginx()
+	if err != nil {
+		return errorHandling.UnableToBeginTransaction()
+	}
+	defer func() error {
+		if err != nil {
+			if rollBackErr := tx.Rollback(); rollBackErr != nil {
+				return errorHandling.UnableToRollbackTransaction()
+			}
+		}
+		if commitErr := tx.Commit(); commitErr != nil {
+			return errorHandling.UnableToCommitTransaction()
+		}
+		return nil
+	}()
+	err = fn(tx)
+	return err
 }

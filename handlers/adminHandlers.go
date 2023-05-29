@@ -6,6 +6,7 @@ import (
 	"06_RMS-chi-db/models"
 	"encoding/json"
 	"net/http"
+	"strconv"
 )
 
 func CreateSubAdmin(w http.ResponseWriter, r *http.Request) {
@@ -18,7 +19,7 @@ func CreateSubAdmin(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorHandling.ErrHandle(err, w)
 	} else {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(user)
 		if err != nil {
 			errorHandling.ErrHandle(errorHandling.UnableToWriteJSON(), w)
@@ -27,7 +28,17 @@ func CreateSubAdmin(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetSubAdminList(w http.ResponseWriter, r *http.Request) {
-	subAdmins, err := dbHelper.GetAllSubAdmin()
+	strLimit := r.URL.Query().Get("limit")
+	limit, err := strconv.Atoi(strLimit)
+	if err != nil {
+		limit = 10
+	}
+	strOffset := r.URL.Query().Get("offset")
+	offset, err := strconv.Atoi(strOffset)
+	if err != nil {
+		offset = 0
+	}
+	subAdmins, err := dbHelper.GetAllSubAdmin(limit, offset)
 	if err != nil {
 		errorHandling.ErrHandle(err, w)
 	} else {

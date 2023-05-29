@@ -23,7 +23,7 @@ func AddUserAddress(w http.ResponseWriter, r *http.Request) {
 		errorHandling.ErrHandle(err, w)
 
 	} else {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(address)
 		if err != nil {
 			errorHandling.ErrHandle(errorHandling.UnableToWriteJSON(), w)
@@ -32,7 +32,17 @@ func AddUserAddress(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetRestaurantList(w http.ResponseWriter, r *http.Request) {
-	restaurants, err := dbHelper.GetAllRestaurants()
+	strLimit := r.URL.Query().Get("limit")
+	limit, err := strconv.Atoi(strLimit)
+	if err != nil {
+		limit = 10
+	}
+	strOffset := r.URL.Query().Get("offset")
+	offset, err := strconv.Atoi(strOffset)
+	if err != nil {
+		offset = 0
+	}
+	restaurants, err := dbHelper.GetAllRestaurants(limit, offset)
 	if err != nil {
 		errorHandling.ErrHandle(err, w)
 	} else {
@@ -45,12 +55,22 @@ func GetRestaurantList(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetDishList(w http.ResponseWriter, r *http.Request) {
+	strLimit := r.URL.Query().Get("limit")
+	limit, err := strconv.Atoi(strLimit)
+	if err != nil {
+		limit = 10
+	}
+	strOffset := r.URL.Query().Get("offset")
+	offset, err := strconv.Atoi(strOffset)
+	if err != nil {
+		offset = 0
+	}
 	strResId := chi.URLParam(r, "resId")
 	resId, err := strconv.Atoi(strResId)
 	if err != nil {
 		errorHandling.ErrHandle(errorHandling.UnableToReadURL(), w)
 	}
-	dishes, err := dbHelper.GetRestaurantDishes(resId)
+	dishes, err := dbHelper.GetRestaurantDishes(resId, limit, offset)
 	if err != nil {
 		w.WriteHeader(http.StatusNoContent)
 	} else {

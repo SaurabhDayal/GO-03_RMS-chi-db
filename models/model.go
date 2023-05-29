@@ -19,6 +19,11 @@ type UsersClient struct {
 	Credit       int    `json:"credit" db:"credit"`
 }
 
+type UsersListPag struct {
+	Users          []UsersClient `json:"users"`
+	TotalUserCount int           `json:"totalUserCount"`
+}
+
 type UserRoles struct {
 	UserId int    `json:"userId" db:"user_id"`
 	Role   string `json:"role" db:"role"`

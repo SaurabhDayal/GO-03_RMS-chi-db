@@ -33,14 +33,22 @@ func RegisterUser(usr *models.Users) (*models.UsersClient, error, string) {
 	if err != nil {
 		return nil, errorHandling.UnableToGenerateToken(), ""
 	}
+
+	// Transaction
+	tx, err := database.RMS.Beginx()
+	if err != nil {
+		return nil, errorHandling.UnableToBeginTransaction(), ""
+	}
+
 	var user models.UsersClient
-	SQL1 := `INSERT INTO users (user_name, user_password, user_email, credit) VALUES ($1,$2,$3,$4) RETURNING id, user_name, user_password, user_email, credit`
-	err = database.RMS.Get(&user, SQL1, usr.UserName, hash, usr.UserEmail, userCredit)
+	SQL1 := `INSERT INTO users (user_name, user_password, user_email, credit) VALUES ($1,$2,$3,$4) 
+             RETURNING id, user_name, user_password, user_email, credit`
+	err = tx.Get(&user, SQL1, usr.UserName, hash, usr.UserEmail, userCredit)
 	if err != nil {
 		return nil, errorHandling.UnableToAccessDB(), ""
 	}
 	SQL2 := `INSERT INTO user_roles (user_id, role) VALUES ($1, $2)`
-	_, err = database.RMS.Exec(SQL2, user.Id, "user")
+	_, err = tx.Exec(SQL2, user.Id, "user")
 	if err != nil {
 		return nil, errorHandling.UnableToAccessDB(), ""
 	}
@@ -51,10 +59,18 @@ func RegisterUser(usr *models.Users) (*models.UsersClient, error, string) {
 	b = []byte(hex.EncodeToString(b))
 	var token string
 	SQL3 := `INSERT INTO auths (user_id, user_token) VALUES ($1, $2) RETURNING user_token`
-	err = database.RMS.Get(&token, SQL3, user.Id, b)
+	err = tx.Get(&token, SQL3, user.Id, b)
 	if err != nil {
 		return nil, errorHandling.UnableToAccessDB(), ""
 	}
+
+	if commitErr := tx.Commit(); commitErr != nil {
+		if rollBackErr := tx.Rollback(); rollBackErr != nil {
+			return nil, errorHandling.UnableToRollbackTransaction(), ""
+		}
+		return nil, errorHandling.UnableToCommitTransaction(), ""
+	}
+
 	return &user, nil, token
 }
 
@@ -74,36 +90,32 @@ func LoginUser(email string, pwd string) (*models.Auths, error) {
 		b = []byte(hex.EncodeToString(b))
 
 		var userId int
-		SQL4 := `SELECT id FROM users WHERE user_email=$1`
-		err = database.RMS.Get(&userId, SQL4, email)
+		SQL2 := `SELECT id FROM users WHERE user_email=$1`
+		err = database.RMS.Get(&userId, SQL2, email)
 		if err != nil && err != sql.ErrNoRows {
 			return nil, errorHandling.UnableToAccessDB()
 		} else if err == sql.ErrNoRows {
-			SQL2 := `INSERT INTO auths (user_id, user_token) VALUES ($1, $2)`
-			_, err = database.RMS.Exec(SQL2, userId, b)
+			var usrSn models.Auths
+			SQL3 := `INSERT INTO auths (user_id, user_token) VALUES ($1, $2) RETURNING user_id, user_token`
+			err = database.RMS.Get(&usrSn, SQL3, userId, b)
 			if err != nil {
 				return nil, errorHandling.UnableToAccessDB()
 			}
+			return &usrSn, nil
 		} else {
-			SQL5 := `DELETE FROM auths WHERE user_id=$1`
-			_, err = database.RMS.Exec(SQL5, userId)
+			SQL4 := `DELETE FROM auths WHERE user_id=$1`
+			_, err = database.RMS.Exec(SQL4, userId)
 			if err != nil {
 				return nil, errorHandling.UnableToAccessDB()
 			}
-			SQL2 := `INSERT INTO auths (user_id, user_token) VALUES ($1, $2)`
-			_, err = database.RMS.Exec(SQL2, userId, b)
+			var usrSn models.Auths
+			SQL3 := `INSERT INTO auths (user_id, user_token) VALUES ($1, $2) RETURNING user_id, user_token`
+			err = database.RMS.Get(&usrSn, SQL3, userId, b)
 			if err != nil {
 				return nil, errorHandling.UnableToAccessDB()
 			}
+			return &usrSn, nil
 		}
-
-		var usrSn models.Auths
-		SQL3 := `SELECT user_id, user_token FROM auths WHERE user_id=$1`
-		err = database.RMS.Get(&usrSn, SQL3, userId)
-		if err != nil {
-			return nil, errorHandling.UnableToAccessDB()
-		}
-		return &usrSn, nil
 	}
 	return nil, errorHandling.UserCredentialNotMatch()
 }

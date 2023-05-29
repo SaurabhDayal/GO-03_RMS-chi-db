@@ -23,13 +23,6 @@ func UserCredentialNotMatch() error {
 	}
 }
 
-func InvalidUser() error {
-	return &models.CustomClientError{
-		Message:    "Invalid Authorization",
-		StatusCode: 400,
-	}
-}
-
 func UnableToAccessDB() error {
 	return &models.CustomClientError{
 		Message:    "unable to access into DB",
@@ -44,7 +37,7 @@ func UnableToReadURL() error {
 	}
 }
 
-func noContentDB() error {
+func NoContentDB() error {
 	return &models.CustomClientError{
 		Message:    "no content in DB",
 		StatusCode: 204,
@@ -68,6 +61,26 @@ func UnableToWriteJSON() error {
 func UnableToGenerateToken() error {
 	return &models.CustomClientError{
 		Message:    "unable to generate token",
+		StatusCode: 500,
+	}
+}
+
+func UnableToBeginTransaction() error {
+	return &models.CustomClientError{
+		Message:    "unable to begin transaction",
+		StatusCode: 500,
+	}
+}
+
+func UnableToRollbackTransaction() error {
+	return &models.CustomClientError{
+		Message:    "unable to rollback transaction",
+		StatusCode: 500,
+	}
+}
+func UnableToCommitTransaction() error {
+	return &models.CustomClientError{
+		Message:    "unable to commit transaction",
 		StatusCode: 500,
 	}
 }

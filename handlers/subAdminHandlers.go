@@ -21,7 +21,7 @@ func CreateRestaurant(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorHandling.ErrHandle(err, w)
 	} else {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(resta)
 		if err != nil {
 			errorHandling.ErrHandle(errorHandling.UnableToWriteJSON(), w)
@@ -40,7 +40,7 @@ func CreateDish(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorHandling.ErrHandle(err, w)
 	} else {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(dishGot)
 		if err != nil {
 			errorHandling.ErrHandle(errorHandling.UnableToWriteJSON(), w)
@@ -105,47 +105,14 @@ func AddOwnerAddress(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errorHandling.ErrHandle(errorHandling.UnableToReadJSON(), w)
 	}
-	address, err := dbHelper.CreateOwnerNewAddress(&addr)
+	address, err := dbHelper.CreateOwnerNewAddress(addr)
 	if err != nil {
 		errorHandling.ErrHandle(err, w)
 	} else {
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 		err = json.NewEncoder(w).Encode(address)
 		if err != nil {
 			errorHandling.ErrHandle(errorHandling.UnableToWriteJSON(), w)
 		}
 	}
 }
-
-//func GetUsersLimitOffset(w http.ResponseWriter, r *http.Request) {
-//	//strLimit := chi.URLParam(r, "limit")
-//	//limit, err := strconv.Atoi(strLimit)
-//	//if err != nil {
-//	//	limit = 10
-//	//}
-//	//strOffset := chi.URLParam(r, "offset")
-//	//offset, err := strconv.Atoi(strOffset)
-//	//if err != nil {
-//	//	offset = 0
-//	//}
-//	strLimit := r.URL.Query().Get("limit")
-//	limit, err := strconv.Atoi(strLimit)
-//	if err != nil {
-//		limit = 10
-//	}
-//	strOffset := r.URL.Query().Get("offset")
-//	offset, err := strconv.Atoi(strOffset)
-//	if err != nil {
-//		offset = 0
-//	}
-//	users, err := dbHelper.GetUsersLimitOffset(limit, offset)
-//	if err != nil {
-//		w.WriteHeader(http.StatusNoContent)
-//	} else {
-//		w.WriteHeader(http.StatusOK)
-//		err = json.NewEncoder(w).Encode(users)
-//		if err != nil {
-//			w.WriteHeader(http.StatusInternalServerError)
-//		}
-//	}
-//}
