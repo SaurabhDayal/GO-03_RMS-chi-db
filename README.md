@@ -17,6 +17,9 @@ BEST PRACTICES (done)
   - specific use case
 - SQL Query jmoiron
   - Get can also Returning columns while Inserting into database, alternative to Exec
+- GLOBAL, CONSTANT and Other VARIABLES
+  - use for DRY purpose and Readability
+  - naming convention for readability  
 
 -----------------------------------------------------------------------------------------------------------------------------------------
 
