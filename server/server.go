@@ -7,10 +7,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-// push commit request
-// push commit request
-// push commit request
-// push commit request
+// push commit
 func SetupRoutes() *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
