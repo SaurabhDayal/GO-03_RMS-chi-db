@@ -20,7 +20,8 @@ BEST PRACTICES (done)
 - GLOBAL, CONSTANT and Other VARIABLES
   - use for DRY purpose and Readability
   - naming convention for readability  
-
+- TRANSACTIONS
+  - without wrapper
 -----------------------------------------------------------------------------------------------------------------------------------------
 
 Remaining
