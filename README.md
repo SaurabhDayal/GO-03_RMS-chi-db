@@ -26,7 +26,6 @@ BEST PRACTICES (done)
 
 Remaining
 - TRANSACTIONS
-  - without wrapper
   - with wrapper 
 
 
