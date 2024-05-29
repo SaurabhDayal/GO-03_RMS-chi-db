@@ -1,6 +1,6 @@
 package errorHandling
 
-import "06_RMS-chi-db/models"
+import "03_RMS/models"
 
 func UserAlreadyPresent() error {
 	return &models.CustomClientError{

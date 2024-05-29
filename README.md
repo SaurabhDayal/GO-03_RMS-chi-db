@@ -1,4 +1,4 @@
-# 06_RMS-chi-db
+# 03_RMS
 
 BEST PRACTICES (done)
 - REGISTER, LOGIN, LOGOUT

@@ -1,7 +1,7 @@
 package errorHandling
 
 import (
-	"06_RMS-chi-db/models"
+	"03_RMS/models"
 	"encoding/json"
 	"net/http"
 )

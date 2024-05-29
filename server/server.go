@@ -1,8 +1,8 @@
 package server
 
 import (
-	"06_RMS-chi-db/handlers"
-	"06_RMS-chi-db/middlewares"
+	"03_RMS/handlers"
+	"03_RMS/middlewares"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

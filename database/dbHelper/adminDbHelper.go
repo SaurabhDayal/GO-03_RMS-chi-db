@@ -1,9 +1,9 @@
 package dbHelper
 
 import (
-	"06_RMS-chi-db/database"
-	"06_RMS-chi-db/errorHandling"
-	"06_RMS-chi-db/models"
+	"03_RMS/database"
+	"03_RMS/errorHandling"
+	"03_RMS/models"
 )
 
 const subAdminCredit = models.SubAdminCredit

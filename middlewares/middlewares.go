@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"06_RMS-chi-db/database/dbHelper"
+	"03_RMS/database/dbHelper"
 	"context"
 	"net/http"
 )

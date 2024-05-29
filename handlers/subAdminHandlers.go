@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"06_RMS-chi-db/database/dbHelper"
-	"06_RMS-chi-db/errorHandling"
-	"06_RMS-chi-db/models"
+	"03_RMS/database/dbHelper"
+	"03_RMS/errorHandling"
+	"03_RMS/models"
 	"encoding/json"
 	"net/http"
 	"strconv"

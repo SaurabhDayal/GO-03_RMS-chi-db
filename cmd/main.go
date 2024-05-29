@@ -1,8 +1,8 @@
 package main
 
 import (
-	"06_RMS-chi-db/database"
-	"06_RMS-chi-db/server"
+	"03_RMS/database"
+	"03_RMS/server"
 	"fmt"
 	"log"
 	"net/http"

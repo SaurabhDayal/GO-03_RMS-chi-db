@@ -1,7 +1,7 @@
 package dbHelper
 
 import (
-	"06_RMS-chi-db/database"
+	"03_RMS/database"
 )
 
 func CheckUserRole(token string) string {
